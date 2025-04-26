@@ -6,6 +6,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.ConfigurationReader;
 
+import java.util.List;
+
 public class HomePage extends BasePage {
 
     public HomePage(TestContext context) {
@@ -27,13 +29,13 @@ public class HomePage extends BasePage {
     public WebElement warningMassage;
 
     @FindBy(css = "[id='form-currency']")
-    public WebElement selectCurrency;
+    public WebElement currency;
+
+    @FindBy(xpath = "//*[@class='currency-select btn btn-link btn-block']")
+    public List<WebElement> listOfCurrencies;
 
     @FindBy(xpath = "//*[@id='form-currency']/div/button/span[1]")
     public WebElement currentCurrency;
-
-    @FindBy(css = "#form-currency > div > ul > li:nth-child(2) > button")
-    public WebElement pound;
 
 
     public void openLoginForm() {
@@ -58,8 +60,16 @@ public class HomePage extends BasePage {
     }
 
     public String changeCurrency() {
-        selectCurrency.click();
-        pound.click();
+        currency.click();
+        String targetCurrency = "USD";
+
+        for (WebElement currency : listOfCurrencies) {
+            String currencyText = currency.getText();
+            if (currencyText.equalsIgnoreCase(targetCurrency)) {
+                currency.click();
+                break;
+            }
+        }
         return context.wait.until(ExpectedConditions.visibilityOf(currentCurrency)).getText();
     }
 }

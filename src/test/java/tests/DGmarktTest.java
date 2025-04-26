@@ -78,6 +78,6 @@ public class DGmarktTest extends BaseTest {
         HomePage homePage = new HomePage(context);
         String currentCurrency = homePage.changeCurrency();
 
-        assertEquals("£", currentCurrency);
+        assertEquals("$", currentCurrency);
     }
 }
