@@ -1,6 +1,7 @@
 package pages;
 
 import context.TestContext;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -38,30 +39,32 @@ public class HomePage extends BasePage {
     public WebElement currentCurrency;
 
 
+    @Step ("Opening a login form")
     public void openLoginForm() {
         context.wait.until(ExpectedConditions.visibilityOf(myAccount)).click();
         context.wait.until(ExpectedConditions.visibilityOf(logIn)).click();
     }
 
+    @Step ("Sending a valid e-mail in reset password form")
     public String sendEmailToResetPassword() {
 
         emailInput.sendKeys(ConfigurationReader.get("userName"));
         continueButton.click();
-
         return context.wait.until(ExpectedConditions.visibilityOf(emailSentConfirmMassage)).getText();
     }
 
+    @Step("Sending an invalid e-mail in reset password form")
     public String sendInvalidEmailToResetPassword() {
 
         emailInput.sendKeys(ConfigurationReader.get("invalidEmail"));
         continueButton.click();
-
         return context.wait.until(ExpectedConditions.visibilityOf(warningMassage)).getText();
     }
 
+    @Step("Changing currency")
     public String changeCurrency() {
         currency.click();
-        String targetCurrency = "USD";
+        String targetCurrency = "£ Pound Sterling";
 
         for (WebElement currency : listOfCurrencies) {
             String currencyText = currency.getText();

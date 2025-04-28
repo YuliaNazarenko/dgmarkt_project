@@ -1,13 +1,14 @@
 package pages;
 
 import context.TestContext;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.ConfigurationReader;
 
-public class RegisterAccountForm extends BasePage {
-    public RegisterAccountForm(TestContext context) {
+public class RegisterAccountPage extends BasePage {
+    public RegisterAccountPage(TestContext context) {
         super(context);
     }
 
@@ -43,6 +44,7 @@ public class RegisterAccountForm extends BasePage {
     public WebElement continueButton;
 
 
+    @Step("Registration form filling")
     public String feelRegisterForm() {
 
         firstName.sendKeys(ConfigurationReader.get("FirstName"));

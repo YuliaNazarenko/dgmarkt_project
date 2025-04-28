@@ -1,6 +1,7 @@
 package pages;
 
 import context.TestContext;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,6 +21,7 @@ public class StartPage extends BasePage {
     @FindBy(xpath = "//*[@class='a-close-newsletter']")
     public WebElement closeSignUp;
 
+    @Step("Open this site for testing")
     public void startPageLogin() {
 
         context.wait.until(ExpectedConditions.visibilityOf(userName)).sendKeys(ConfigurationReader.get("userName"));
@@ -27,6 +29,5 @@ public class StartPage extends BasePage {
         context.wait.until(ExpectedConditions.visibilityOf(submitButton));
         submitButton.click();
         closeSignUp.click();
-
     }
 }
