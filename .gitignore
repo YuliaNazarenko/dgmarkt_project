@@ -4,10 +4,13 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/*
 *.iws
 *.iml
 *.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### Eclipse ###
 .apt_generated
@@ -33,3 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Allure ###
+allure-results/
+allure-report/
