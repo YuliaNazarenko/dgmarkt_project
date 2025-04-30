@@ -1,7 +1,10 @@
 package tests;
 
+import io.qameta.allure.Allure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import pages.HomePage;
 import pages.LoginPage;
 
@@ -62,5 +65,19 @@ public class LoginPageTest extends BaseTest {
 
         assertEquals("Warning: The E-Mail Address was not found in our records, please try again!",
                 warningMassageText);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Login with two parameters")
+    @CsvFileSource(resources = "/data.csv")
+    public void login(String login, String password){
+        HomePage homePage = new HomePage(context);
+        homePage.openLoginForm();
+
+        LoginPage loginPage = new LoginPage(context);
+        loginPage.loginWithParameters(login, password);
+
+        Allure.addAttachment("login", login);
+        Allure.addAttachment("password", password);
     }
 }

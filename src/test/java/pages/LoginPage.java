@@ -88,6 +88,16 @@ public class LoginPage extends BasePage {
 
         return context.wait.until(ExpectedConditions.visibilityOf(alertSuccess)).getText();
     }
+
+    @Step("Login to account with login: {login} and password: {password}")
+    public String loginWithParameters(String login, String password) {
+
+        context.wait.until(ExpectedConditions.visibilityOf(inputLogin)).sendKeys(login);
+        inputPassword.sendKeys(password);
+        clickLogInButton();
+
+        return context.wait.until(ExpectedConditions.visibilityOf(alertSuccess)).getText();
+    }
 }
 
 
