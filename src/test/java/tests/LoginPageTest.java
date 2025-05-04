@@ -70,12 +70,14 @@ public class LoginPageTest extends BaseTest {
     @ParameterizedTest
     @DisplayName("Login with two parameters")
     @CsvFileSource(resources = "/data.csv")
-    public void login(String login, String password){
+    public void loginWithValidParameters(String login, String password){
         HomePage homePage = new HomePage(context);
         homePage.openLoginForm();
 
         LoginPage loginPage = new LoginPage(context);
-        loginPage.loginWithParameters(login, password);
+        String alertSuccess = loginPage.loginWithValidParameters(login, password);
+
+        assertEquals("Congratulation! Login Successfully\n×", alertSuccess);
 
         Allure.addAttachment("login", login);
         Allure.addAttachment("password", password);
