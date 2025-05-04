@@ -8,8 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import utils.ConfigurationReader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class CheckoutPage extends BasePage {
     public CheckoutPage(TestContext context) {
         super(context);
@@ -102,24 +100,20 @@ public class CheckoutPage extends BasePage {
         context.wait.until(ExpectedConditions.visibilityOf(deliveryMassage)).sendKeys("Lassen Sie bitte das Paket vor die Tür");
         context.wait.until(ExpectedConditions.visibilityOf(deliveryButton)).click();
         context.wait.until(ExpectedConditions.visibilityOf(paymentButtonContinue)).click();
-
-        String massageText = context.wait.until(ExpectedConditions.visibilityOf(alertMessage)).getText();
-        assertEquals("Warning: You must agree to the Terms & Conditions!\n×",
-                massageText);
         context.wait.until(ExpectedConditions.visibilityOf(agrees)).click();
-
         paymentButtonContinue.click();
         context.wait.until(ExpectedConditions.visibilityOf(confirm)).click();
+        context.wait.until(ExpectedConditions.titleIs("Your order has been placed!"));
 
     }
 
     @Step("Checks that impossible to make an order without agrees")
-    public String makeOrderwithoutAgrres() {
+    public String makeOrderWithoutAgrees() {
         context.wait.until(ExpectedConditions.visibilityOf(radioGuest)).click();
         context.wait.until(ExpectedConditions.visibilityOf(buttonContinue)).click();
         context.wait.until(ExpectedConditions.visibilityOf(firstName)).sendKeys("My first name");
         context.wait.until(ExpectedConditions.visibilityOf(lastName)).sendKeys("My last name");
-        context.wait.until(ExpectedConditions.visibilityOf(email)).sendKeys("myemail@mail.com");
+        context.wait.until(ExpectedConditions.visibilityOf(email)).sendKeys(ConfigurationReader.get("guestEmail"));
         context.wait.until(ExpectedConditions.visibilityOf(telephone)).sendKeys(ConfigurationReader.get("Telephone"));
         context.wait.until(ExpectedConditions.visibilityOf(company)).sendKeys("My Company");
         context.wait.until(ExpectedConditions.visibilityOf(address1)).sendKeys("My street 22");
@@ -138,9 +132,6 @@ public class CheckoutPage extends BasePage {
         context.wait.until(ExpectedConditions.visibilityOf(deliveryButton)).click();
         context.wait.until(ExpectedConditions.visibilityOf(paymentButtonContinue)).click();
 
-//        String massageText = context.wait.until(ExpectedConditions.visibilityOf(alertMessage)).getText();
-//        assertEquals("Warning: You must agree to the Terms & Conditions!\n×",
-//                massageText);
         return context.wait.until(ExpectedConditions.visibilityOf(alertMessage)).getText();
 
     }

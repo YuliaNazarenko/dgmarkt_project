@@ -2,15 +2,13 @@ package tests;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.CheckoutPage;
 import pages.HomePage;
 
-import static java.sql.DriverManager.getDriver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CheckoutTest extends BaseTest {
+
     @Test
     @DisplayName("Order as a guest")
     public void orderGuest() {
@@ -20,8 +18,7 @@ public class CheckoutTest extends BaseTest {
         CheckoutPage checkoutPage = new CheckoutPage(context);
         checkoutPage.fillGuestCheckoutForm();
 
-       assertTrue(context.wait.until(ExpectedConditions.titleIs("Your order has been placed!")));
-        //assertEquals("Your order has been placed!", getDriver(context).getTitle());
+        assertEquals("Your order has been placed!", context.driver.getTitle());
     }
 
     @Test
@@ -31,9 +28,9 @@ public class CheckoutTest extends BaseTest {
         homePage.addToCardQuick();
 
         CheckoutPage checkoutPage = new CheckoutPage(context);
-        String alertMassageText = checkoutPage.makeOrderwithoutAgrres();
+        String alertMassageText = checkoutPage.makeOrderWithoutAgrees();
 
         assertEquals("Warning: You must agree to the Terms & Conditions!\n×",
-               alertMassageText);
+                alertMassageText);
     }
 }
