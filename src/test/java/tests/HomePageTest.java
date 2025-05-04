@@ -14,7 +14,7 @@ public class HomePageTest extends BaseTest {
         HomePage homePage = new HomePage(context);
         String currentCurrency = homePage.changeCurrency();
 
-        assertEquals("£", currentCurrency);
+        assertEquals(ConfigurationReader.get("TestChangeCurrency").substring(0, 1), currentCurrency);
     }
 
     @Test
@@ -22,7 +22,7 @@ public class HomePageTest extends BaseTest {
     public void addToCart() {
 
         assertEquals("Success: You have added " +
-                (ConfigurationReader.get("searching_item")) + " to your shopping cart!\n×",
+                        (ConfigurationReader.get("searching_item")) + " to your shopping cart!\n×",
                 new HomePage(context).addToCartSearch());
     }
 }

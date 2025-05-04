@@ -36,7 +36,7 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//*[@class='currency-select btn btn-link btn-block']")
     public List<WebElement> listOfCurrencies;
 
-    @FindBy(xpath = "//*[@id='form-currency']/div/button/span[1]")
+    @FindBy(xpath = "//*[@id='form-currency']//button/span[1]")
     public WebElement currentCurrency;
 
     @FindBy(css = "div[class='dropdown-toggle search-button']")
@@ -88,7 +88,7 @@ public class HomePage extends BasePage {
     @Step("Changing currency")
     public String changeCurrency() {
         context.wait.until(ExpectedConditions.visibilityOf(currency)).click();
-        String targetCurrency = "£ Pound Sterling";
+        String targetCurrency = ConfigurationReader.get("TestChangeCurrency");
 
         for (WebElement currency : listOfCurrencies) {
             String currencyText = currency.getText();
