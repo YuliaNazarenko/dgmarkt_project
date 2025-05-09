@@ -22,12 +22,12 @@ public class LoginPageTest extends BaseTest {
         LoginPage loginPage = new LoginPage(context);
         loginPage.clickLogInButton();
 
-        String alertMessageText = loginPage.checkAlertMassage();
+        String alertMassageWarningText = loginPage.checkAlertMassage();
 
         assertEquals("Returning Customer", loginPage.getHeaderText());
 
-        assertTrue(alertMessageText.equals("Warning: No match for E-Mail Address and/or Password.\n×")
-                        || alertMessageText.equals("Warning: Your account has exceeded allowed number of login attempts. " +
+        assertTrue(alertMassageWarningText.equals("Warning: No match for E-Mail Address and/or Password.\n×")
+                        || alertMassageWarningText.equals("Warning: Your account has exceeded allowed number of login attempts. " +
                         "Please try again in 1 hour.\n×"),
                 "Message text does not match any of the expected values");
     }
@@ -36,9 +36,13 @@ public class LoginPageTest extends BaseTest {
     @DisplayName("Login to account with valid data")
     public void loginValidData() {
         LoginPage loginPage = new LoginPage(context);
-        String alertText = loginPage.login();
+        String alertText = loginPage.loginWithValidData();
 
         assertEquals("Congratulation! Login Successfully\n×", alertText);
+
+        //new HomePage(context).clickOnMyAccount();
+        //assertTrue(context.wait.until(ExpectedConditions.urlContains("account/account")));
+        //эта проверка заработает, когда будет решена проблема со всплывающими окнами
     }
 
     @Test
@@ -48,7 +52,7 @@ public class LoginPageTest extends BaseTest {
         homePage.openLoginForm();
         LoginPage loginPage = new LoginPage(context);
         loginPage.clickForgottenPasswordLink();
-        String emailSentConfirmMassageText = homePage.sendEmailToResetPassword();
+        String emailSentConfirmMassageText = loginPage.sendEmailToResetPassword();
 
         assertEquals("An email with a confirmation link has been sent your email address.",
                 emailSentConfirmMassageText);
@@ -61,7 +65,7 @@ public class LoginPageTest extends BaseTest {
         homePage.openLoginForm();
         LoginPage loginPage = new LoginPage(context);
         loginPage.clickForgottenPasswordLink();
-        String warningMassageText = homePage.sendInvalidEmailToResetPassword();
+        String warningMassageText = loginPage.sendInvalidEmailToResetPassword();
 
         assertEquals("Warning: The E-Mail Address was not found in our records, please try again!",
                 warningMassageText);
@@ -70,7 +74,7 @@ public class LoginPageTest extends BaseTest {
     @ParameterizedTest
     @DisplayName("Login with two parameters")
     @CsvFileSource(resources = "/data.csv")
-    public void loginWithValidParameters(String login, String password){
+    public void loginWithValidParameters(String login, String password) {
         HomePage homePage = new HomePage(context);
         homePage.openLoginForm();
 

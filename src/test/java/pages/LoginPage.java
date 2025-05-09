@@ -14,6 +14,8 @@ public class LoginPage extends BasePage {
         super(context);
     }
 
+//Elements-----------------------------------------------------------
+
     @FindBy(css = "[class=login-form-content] h3")
     public WebElement loginFormHeader;
 
@@ -30,10 +32,7 @@ public class LoginPage extends BasePage {
     public WebElement createAccountButton;
 
     @FindBy(xpath = "//*[@class='alert alert-danger']")
-    public WebElement alertMessage;
-
-    @FindBy(css = "div[class='register-form-content'] h3")
-    public WebElement registerForm;
+    public WebElement alertMassageWarning;
 
     @FindBy(css = "[class='forgotten']")
     public WebElement forgottenPasswordLink;
@@ -44,29 +43,38 @@ public class LoginPage extends BasePage {
     @FindBy(css = "div[class='alert alert-success']")
     WebElement alertSuccess;
 
-    @Step("Get the login form header text")
+    @FindBy(css = "input[value= Continue]")
+    public WebElement continueButton;
+
+    @FindBy(css = "div[class='alert alert-success alert-dismissible']")
+    public WebElement emailSentConfirmMassage;
+
+    @FindBy(css = "div[class='alert alert-danger alert-dismissible']")
+    public WebElement warningMassage;
+
+//Steps------------------------------------------------------------
+
+    @Step("Get the Login form header text")
     public String getHeaderText() {
         return loginFormHeader.getText();
     }
 
-    @Step("Click a login button")
+    @Step("Click Login button")
     public void clickLogInButton() {
         context.wait.until(ExpectedConditions.visibilityOf(logInButton)).click();
     }
 
-    @Step("Check an alert massage in login form")
-    public String checkAlertMassage(){
-        return context.wait.until(ExpectedConditions.visibilityOf(alertMessage)).getText();
+    @Step("Check an Warning alert massage in Login form")
+    public String checkAlertMassage() {
+        return context.wait.until(ExpectedConditions.visibilityOf(alertMassageWarning)).getText();
     }
 
     @Step("Open a form for new account creation")
-    public void openCreateAccountForm() {
+    public String openCreateAccountForm() {
         HomePage homePage = new HomePage(context);
         homePage.openLoginForm();
         context.wait.until(ExpectedConditions.visibilityOf(createAccountButton)).click();
-        String registerFormText = context.wait.until(ExpectedConditions.visibilityOf(registerForm)).getText();
-
-        assertEquals("Register Account", registerFormText);
+        return context.wait.until(ExpectedConditions.visibilityOf(new RegisterAccountPage(context).registerForm)).getText();
     }
 
     @Step("Click on the 'Forgotten password' link")
@@ -78,8 +86,24 @@ public class LoginPage extends BasePage {
                 "Click submit to have a password reset link e-mailed to you.", enterEmailMassageText);
     }
 
+    @Step("Sending a valid e-mail in reset password form")
+    public String sendEmailToResetPassword() {
+
+        inputLogin.sendKeys(ConfigurationReader.get("userName"));
+        continueButton.click();
+        return context.wait.until(ExpectedConditions.visibilityOf(emailSentConfirmMassage)).getText();
+    }
+
+    @Step("Sending an invalid e-mail in reset password form")
+    public String sendInvalidEmailToResetPassword() {
+
+        inputLogin.sendKeys(ConfigurationReader.get("invalidEmail"));
+        continueButton.click();
+        return context.wait.until(ExpectedConditions.visibilityOf(warningMassage)).getText();
+    }
+
     @Step("Login to account with valid data")
-    public String login(){
+    public String loginWithValidData() {
         HomePage homePage = new HomePage(context);
         homePage.openLoginForm();
         context.wait.until(ExpectedConditions.visibilityOf(inputLogin)).sendKeys(ConfigurationReader.get("TestEmail"));
@@ -89,15 +113,13 @@ public class LoginPage extends BasePage {
         return context.wait.until(ExpectedConditions.visibilityOf(alertSuccess)).getText();
     }
 
-    @Step("Login to account with login: {login} and password: {password}")
+    @Step("Login to account with loginWithValidData: {loginWithValidData} and password: {password}")
     public String loginWithValidParameters(String login, String password) {
 
         context.wait.until(ExpectedConditions.visibilityOf(inputLogin)).sendKeys(login);
         inputPassword.sendKeys(password);
         clickLogInButton();
-
         context.wait.until(ExpectedConditions.visibilityOf(alertSuccess)).getText();
-
         return alertSuccess.getText();
 
     }

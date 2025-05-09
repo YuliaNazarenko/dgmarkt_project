@@ -13,11 +13,32 @@ public class CheckoutPage extends BasePage {
         super(context);
     }
 
+//Elements---------------------------------------
+
+    //Buttons-------------------------------------
+
     @FindBy(css = "[value='guest']")
     public WebElement radioGuest;
 
     @FindBy(css = "[value='Continue']")
     public WebElement buttonContinue;
+
+    @FindBy(css = "[id='button-guest']")
+    public WebElement buttonGuest;
+
+    @FindBy(css = "[id='button-shipping-method']")
+    public WebElement deliveryButton;
+
+    @FindBy(css = "[id='button-payment-method']")
+    public WebElement paymentButtonContinue;
+
+    @FindBy(css = "[id='button-confirm']")
+    public WebElement confirmButton;
+
+    @FindBy(css = "[name='agree']")
+    public WebElement agrees;
+
+    //Fields------------------------------------------------
 
     @FindBy(css = "[id='input-payment-firstname']")
     public WebElement firstName;
@@ -52,29 +73,16 @@ public class CheckoutPage extends BasePage {
     @FindBy(css = "[id='input-payment-zone']")
     public WebElement region;
 
-    @FindBy(css = "[id='button-guest']")
-    public WebElement buttonGuest;
-
     @FindBy(css = "[name='comment']")
     public WebElement deliveryMassage;
 
-    @FindBy(css = "[id='button-shipping-method']")
-    public WebElement deliveryButton;
-
-    @FindBy(css = "[id='button-payment-method']")
-    public WebElement paymentButtonContinue;
+    //Alerts----------------------------------------
 
     @FindBy(xpath = "//*[@class='alert alert-danger alert-dismissible']")
     public WebElement alertMessage;
 
-    @FindBy(css = "[name='agree']")
-    public WebElement agrees;
 
-    @FindBy(css = "[id='button-confirm']")
-    public WebElement confirm;
-
-    @FindBy(css = "[class='container-inner']")
-    public WebElement finalMessage;
+//Steps------------------------------------------------------------------
 
     @Step("Fill the fields in guest checkout form")
     public void fillGuestCheckoutForm() {
@@ -102,12 +110,12 @@ public class CheckoutPage extends BasePage {
         context.wait.until(ExpectedConditions.visibilityOf(paymentButtonContinue)).click();
         context.wait.until(ExpectedConditions.visibilityOf(agrees)).click();
         paymentButtonContinue.click();
-        context.wait.until(ExpectedConditions.visibilityOf(confirm)).click();
+        context.wait.until(ExpectedConditions.visibilityOf(confirmButton)).click();
         context.wait.until(ExpectedConditions.titleIs("Your order has been placed!"));
 
     }
 
-    @Step("Checks that impossible to make an order without agrees")
+    @Step("Checks impossibility to make an order without agrees")
     public String makeOrderWithoutAgrees() {
         context.wait.until(ExpectedConditions.visibilityOf(radioGuest)).click();
         context.wait.until(ExpectedConditions.visibilityOf(buttonContinue)).click();
@@ -133,7 +141,5 @@ public class CheckoutPage extends BasePage {
         context.wait.until(ExpectedConditions.visibilityOf(paymentButtonContinue)).click();
 
         return context.wait.until(ExpectedConditions.visibilityOf(alertMessage)).getText();
-
     }
-
 }

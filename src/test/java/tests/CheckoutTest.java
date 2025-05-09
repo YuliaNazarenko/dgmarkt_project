@@ -13,7 +13,7 @@ public class CheckoutTest extends BaseTest {
     @DisplayName("Order as a guest")
     public void orderGuest() {
         HomePage homePage = new HomePage(context);
-        homePage.addToCardQuick();
+        homePage.addToCardByLink();
 
         CheckoutPage checkoutPage = new CheckoutPage(context);
         checkoutPage.fillGuestCheckoutForm();
@@ -25,7 +25,7 @@ public class CheckoutTest extends BaseTest {
     @DisplayName("Order without agrees")
     public void orderWithoutAgrees() {
         HomePage homePage = new HomePage(context);
-        homePage.addToCardQuick();
+        homePage.addToCardByLink();
 
         CheckoutPage checkoutPage = new CheckoutPage(context);
         String alertMassageText = checkoutPage.makeOrderWithoutAgrees();

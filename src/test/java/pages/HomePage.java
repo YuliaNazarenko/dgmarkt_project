@@ -16,19 +16,18 @@ public class HomePage extends BasePage {
         super(context);
     }
 
+//Elements----------------------------------------------------------
+
+    //Account elements----------------------------------------------
+
     @FindBy(css = "a[data-toggle='dropdown']")
     public WebElement myAccount;
+    @FindBy(css = "a[id=pt-register-link]")
+    public WebElement register;
     @FindBy(id = "pt-login-link")
     public WebElement logIn;
 
-    @FindBy(css = "input[id= input-email]")
-    public WebElement emailInput;
-    @FindBy(css = "input[value= Continue]")
-    public WebElement continueButton;
-    @FindBy(css = "div[class='alert alert-success alert-dismissible']")
-    public WebElement emailSentConfirmMassage;
-    @FindBy(css = "div[class='alert alert-danger alert-dismissible']")
-    public WebElement warningMassage;
+    //Currency---------------------------------------------------------------------
 
     @FindBy(css = "[id='form-currency']")
     public WebElement currency;
@@ -38,6 +37,8 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//*[@id='form-currency']//button/span[1]")
     public WebElement currentCurrency;
+
+    //Search--------------------------------------------------------------------
 
     @FindBy(css = "div[class='dropdown-toggle search-button']")
     public WebElement searchOpen;
@@ -51,8 +52,7 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//a[contains(text(), 'Nicky Clarke')]")
     public List<WebElement> nickyClarkeItems;
 
-    @FindBy(css = "button[id='button-cart']")
-    public WebElement addToCartButton;
+    //Shopping Bag-------------------------------------------------------------
 
     @FindBy(xpath = "//*[@class='btn-group btn-block']")
     public WebElement shoppingBag;
@@ -60,29 +60,17 @@ public class HomePage extends BasePage {
     @FindBy(css = "a[href*='checkout/checkout']")
     public WebElement checkoutButton;
 
-    @FindBy(xpath = "//*[@class ='alert alert-fix alert-success alert-dismissible']")
-    public WebElement alertMessage;
+//Steps-------------------------------------
 
-    @Step("Opening a login form")
+    @Step("Click on My Account")
+    public void clickOnMyAccount() {
+        context.wait.until(ExpectedConditions.visibilityOf(myAccount)).click();
+    }
+
+    @Step("Open login form")
     public void openLoginForm() {
         context.wait.until(ExpectedConditions.visibilityOf(myAccount)).click();
         context.wait.until(ExpectedConditions.visibilityOf(logIn)).click();
-    }
-
-    @Step("Sending a valid e-mail in reset password form")
-    public String sendEmailToResetPassword() {
-
-        emailInput.sendKeys(ConfigurationReader.get("userName"));
-        continueButton.click();
-        return context.wait.until(ExpectedConditions.visibilityOf(emailSentConfirmMassage)).getText();
-    }
-
-    @Step("Sending an invalid e-mail in reset password form")
-    public String sendInvalidEmailToResetPassword() {
-
-        emailInput.sendKeys(ConfigurationReader.get("invalidEmail"));
-        continueButton.click();
-        return context.wait.until(ExpectedConditions.visibilityOf(warningMassage)).getText();
     }
 
     @Step("Changing currency")
@@ -103,7 +91,8 @@ public class HomePage extends BasePage {
     @Step("Add item to cart using Search")
     public String addToCartSearch() {
         context.wait.until(ExpectedConditions.visibilityOf(searchOpen)).click();
-        context.wait.until(ExpectedConditions.visibilityOf(inputTextSearch)).sendKeys("Nicky Clarke");
+        context.wait.until(ExpectedConditions.visibilityOf(inputTextSearch)).
+                sendKeys(ConfigurationReader.get("searching_item").substring(0, 12));
         search.click();
 
         String targetItem = (ConfigurationReader.get("searching_item"));
@@ -115,14 +104,14 @@ public class HomePage extends BasePage {
                 break;
             }
         }
-        context.wait.until(ExpectedConditions.visibilityOf(addToCartButton)).click();
-        return context.wait.until(ExpectedConditions.visibilityOf(alertMessage)).getText();
+        context.wait.until(ExpectedConditions.visibilityOf(new ItemPage(context).addToCartButton)).click();
+        return context.wait.until(ExpectedConditions.visibilityOf(new ItemPage(context).alertMessage)).getText();
     }
 
-    @Step("Add item to shopping bag and go to checkout page")
-    public CheckoutPage addToCardQuick() {
+    @Step("Add item by link and go to checkout page")
+    public void addToCardByLink() {
         context.driver.get(ConfigurationReader.get("item_url"));
-        context.wait.until(ExpectedConditions.visibilityOf(addToCartButton)).click();
+        context.wait.until(ExpectedConditions.visibilityOf(new ItemPage(context).addToCartButton)).click();
         context.wait.until(ExpectedConditions.visibilityOf(shoppingBag)).click();
         int attempts = 0;
         while (attempts < 3) {
@@ -140,6 +129,5 @@ public class HomePage extends BasePage {
             }
             attempts++;
         }
-        return new CheckoutPage(context);
     }
 }

@@ -12,6 +12,13 @@ public class RegisterAccountPage extends BasePage {
         super(context);
     }
 
+//Elements----------------------------------------------------------
+
+    //Registration Form
+
+    @FindBy(css = "div[class='register-form-content'] h3")
+    public WebElement registerForm;
+
     @FindBy(css = "input[name='firstname']")
     public WebElement firstName;
 
@@ -33,19 +40,17 @@ public class RegisterAccountPage extends BasePage {
     @FindBy(css = "input[name='agree']")
     public WebElement checkboxAgree;
 
-    @FindBy(css = "input[onclick='ptlogin.registerAction();']")
+    @FindBy(css = "input[value=Continue]")
     public WebElement registerContinueButton;
 
-
     @FindBy(css = "[class='account-success'] h2")
-    public WebElement accountSuccess; //Your Account Has Been Created!
-
-    @FindBy(css = "button[class='button']")
-    public WebElement continueButton;
+    public WebElement accountSuccessHeader;
 
 
     @Step("Registration form filling")
-    public String feelRegisterForm() {
+    public String fillRegisterForm() {
+
+        context.wait.until(ExpectedConditions.visibilityOf(registerForm));
 
         firstName.sendKeys(ConfigurationReader.get("FirstName"));
         lastName.sendKeys(ConfigurationReader.get("LastName"));
@@ -53,14 +58,9 @@ public class RegisterAccountPage extends BasePage {
         telephone.sendKeys(ConfigurationReader.get("Telephone"));
         password.sendKeys(ConfigurationReader.get("TestPassword"));
         confirmPassword.sendKeys(ConfigurationReader.get("TestPassword"));
-
         checkboxAgree.click();
-        registerContinueButton.click();
+        context.wait.until(ExpectedConditions.elementToBeClickable(registerContinueButton)).click();
 
-        String accountSuccessText = context.wait.until(ExpectedConditions.visibilityOf(accountSuccess)).getText();
-        continueButton.click();
-        context.wait.until(ExpectedConditions.urlToBe("https://dgmarkt.com/index.php?route=account/account"));
-
-        return accountSuccessText;
+        return context.wait.until(ExpectedConditions.visibilityOf(accountSuccessHeader)).getText();
     }
 }
